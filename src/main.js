@@ -9,25 +9,54 @@ import storageDriver from '@cycle/storage'
 
 import StudentCollection from './StudentCollection'
 
-function intent(DOMSource) {
-  return undefined
+function intent(DOMSource, storageSource) {
+  let storageRequests$ = DOMSource.select('input')
+    .events('keypress')
+    .debug((ev) => {
+      return console.log(ev)}
+    )
+    .map(( ev ) =>{
+      return {
+        key: 'inputText',
+        value: ev.target.value
+      }
+    })
+
+
+
+  return {
+    DOM: storageSource.local
+      .getItem('inputText')
+      .startWith('')
+      .map((text) => {
+        input({props: {
+          type: 'text',
+          value: text,
+        }})
+      }),
+    storage: storageRequests$,
+  }
 }
 
-function model(action$) {
+function model(response$) {
+
   return undefined
 }
 
 function view(state$) {
-  return StudentCollection().DOM
+  return StudentCollection(state$).DOM
 }
 
 function main(sources) {
+
+
   // click actions
-  const action$ = intent(sources.DOM)
+  let response$ = intent(sources.DOM, sources.storage)
+
   // application state stream
-  const state$ = model(action$, sources)
+  let state$ = model(response$)
   // application view combines static components
-  const view$ = view(state$)
+  let view$ = view(state$)
 
   return {
     DOM: view$
