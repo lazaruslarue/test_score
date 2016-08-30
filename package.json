@@ -1,0 +1,38 @@
+{
+  "name": "test_score",
+  "version": "1.0.0",
+  "description": "a list of student names &amp; test scores. min, max, and average grade.",
+  "main": "index.js",
+  "scripts": {
+    "serve": "webpack-dev-server -d --progress --colors --inline --content-base src/",
+    "start": "npm install && npm run serve",
+    "build": "NODE_ENV=production webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lazaruslarue/test_score.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lazaruslarue/test_score/issues"
+  },
+  "homepage": "https://github.com/lazaruslarue/test_score#readme",
+  "devDependencies": {
+    "webpack": "^1.13.2",
+    "webpack-dev-server": "^1.15.0"
+  },
+  "dependencies": {
+    "@cycle/core": "^6.0.0",
+    "@cycle/dom": "^10.0.2",
+    "@cycle/fetch": "^4.0.0",
+    "@cycle/http": "^9.0.2",
+    "@cycle/isolate": "^1.4.0",
+    "@cycle/xstream-run": "^3.0.3",
+    "cycle-restart": "0.0.14",
+    "cyclic-router": "^2.1.2",
+    "history": "^3.0.0",
+    "webpack-dev-server": "^1.14.1",
+    "xstream": "^5.0.6"
+  }
+}
