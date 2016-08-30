@@ -2,9 +2,12 @@
 import xs from 'xstream'
 import {run} from '@cycle/xstream-run'
 import {makeDOMDriver} from '@cycle/dom'
-import {makeHTTPDriver} from '@cycle/http'
 import {makeRouterDriver} from 'cyclic-router'
 import {createHistory} from 'history'
+import storageDriver from '@cycle/storage'
+
+
+import StudentCollection from './StudentCollection'
 
 function intent(DOMSource) {
   return undefined
@@ -14,8 +17,8 @@ function model(action$) {
   return undefined
 }
 
-function view(action$) {
-  return undefined
+function view(state$) {
+  return StudentCollection().DOM
 }
 
 function main(sources) {
@@ -24,7 +27,7 @@ function main(sources) {
   // application state stream
   const state$ = model(action$, sources)
   // application view combines static components
-  const view$ = view(state$, sources)
+  const view$ = view(state$)
 
   return {
     DOM: view$
@@ -33,8 +36,8 @@ function main(sources) {
 
 const drivers = {
   DOM: makeDOMDriver('#root'),
-  // HTTP: makeHTTPDriver(),
   router: makeRouterDriver(createHistory()),
+  storage: storageDriver,
 };
 
 run(main, drivers);
