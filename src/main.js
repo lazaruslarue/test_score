@@ -1,4 +1,3 @@
-// Main.js in Application
 import xs from 'xstream'
 import {run} from '@cycle/xstream-run'
 import {makeDOMDriver} from '@cycle/dom'
@@ -7,65 +6,60 @@ import {createHistory} from 'history'
 import storageDriver from '@cycle/storage'
 
 
-import StudentCollection from './StudentCollection'
 
-function intent(DOMSource, storageSource) {
-  let storageRequests$ = DOMSource.select('input')
-    .events('keypress')
-    .debug((ev) => {
-      return console.log(ev)}
-    )
-    .map(( ev ) =>{
+//view
+import {div, p, input} from '@cycle/dom'
+
+function intent(DOM, storage) {
+  // kepress events from input element
+  const exitvalue$ = DOM.select('input')
+    .events('keyup')
+    .map(function(ev) {
       return {
         key: 'inputText',
         value: ev.target.value
-      }
+      };
     })
 
-
-
   return {
-    DOM: storageSource.local
-      .getItem('inputText')
-      .startWith('')
-      .map((text) => {
-        input({props: {
-          type: 'text',
-          value: text,
-        }})
-      }),
-    storage: storageRequests$,
+    storage: storage.local.getItem('inputText')
+      .startWith(''),
+    DOM: exitvalue$,
   }
 }
 
-function model(response$) {
-
-  return undefined
+function model({request$, storage}) {
+  let stored$ = storage.startWith('')
+  return stored$
 }
 
 function view(state$) {
-  return StudentCollection(state$).DOM
+  return state$.map((text) => {
+    console.log('view', text);
+     return div([input({props: {
+       type: 'text',
+       value: text
+     }}), p(text)])
+    })
 }
 
 function main(sources) {
-
-
-  // click actions
-  let response$ = intent(sources.DOM, sources.storage)
-
-  // application state stream
-  let state$ = model(response$)
-  // application view combines static components
+  // returns:  keypress input$ & storage$
+  let action$ = intent(sources.DOM, sources.storage)
+  // write dom elements from storage
+  // store inputs locally
+  let state$ = model(action$, sources.storage)
+  // vDom$
   let view$ = view(state$)
 
   return {
-    DOM: view$
+    DOM: view$,
+    storage: action$.DOM,
   }
 }
 
 const drivers = {
   DOM: makeDOMDriver('#root'),
-  router: makeRouterDriver(createHistory()),
   storage: storageDriver,
 };
 
