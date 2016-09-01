@@ -17,9 +17,6 @@
 // Turn the data object that contains
 export default function serialize(storage$) {
 
-  return storage$.map(test => {
-    console.log('storage serialize', test)
+  return storage$.map(val => JSON.stringify(val))
 
-    return JSON.stringify(test)
-  })
 };

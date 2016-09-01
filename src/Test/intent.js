@@ -1,20 +1,20 @@
 import xs from 'xstream'
 
-export default function intent(DOMsource, remove$) {
+export default function intent(DOMsource, proxyItemAction$) {
   // kepress events from input element
   // Add new
-  const add$ = DOMsource.select('.add')
+  const insert$ = DOMsource.select('.add')
     .events('click')
     .map(function(ev) {
-        console.log('add reqeust',ev)
+        // at this point, a user has clicked.
+        // we need to add this new student to the list
+        console.log('click add reqeust',ev)
+
       return {
-        key: 'Score',
-        value:  'new Student'
+        type: 'newScore',
+        payload: {name: '', score: 10}
       };
     })
 
-  const changeRequest$ = xs.merge(add$, remove$)
-
-
-  return changeRequest$
+  return xs.merge(insert$, proxyItemAction$)
 }

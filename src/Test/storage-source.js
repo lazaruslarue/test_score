@@ -13,23 +13,26 @@ function merge() {
 
 let safeJSONParse = str => JSON.parse(str) || {};
 
-let mergeWithDefaultTodosData = todosData => {
-console.log('todosData', todosData);
-debugger
-
-  return todosData
-  // return merge({
-  //   list: [],
-  //   filter: '',
-  //   filterFn: () => true, // allow anything
-  // }, todosData);
+let mergeWithDefaultQuizData = quizData => {
+// console.log('~~~~~~~~~ merge quizData', quizData);
+  let result = merge({
+    name: 'New Quiz',
+    scores: [],
+    value: 100,
+  }, quizData);
+  // console.log('result   ', result);
+  // return todosData
+  return merge({
+    name: 'New Quiz',
+    scores: [],
+    value: 100,
+  }, quizData);
 }
 
 // Take localStorage todoData stream and transform into
 // a JavaScript object. Set default data.
 export default function deserialize(localStorageValue$) {
   return localStorageValue$
-  .debug(console.log)
     .map(safeJSONParse)
-    .map(mergeWithDefaultTodosData);
+    .map(mergeWithDefaultQuizData);
 };
