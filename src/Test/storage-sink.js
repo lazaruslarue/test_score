@@ -1,22 +1,20 @@
 // Turn the data object that contains
-// the todos into a string for localStorage.
-// export default function serialize(scores$) {
-//   return scores$.map(test => JSON.stringify(
-//     {
-//       list: test.scores.map(scoreData =>
-//         ({
-//           name: scoreData.name,
-//           score: scoreData.score,
-//         })
-//       )
-//     }
-//   ));
-// };
-
-
-// Turn the data object that contains
-export default function serialize(storage$) {
-
-  return storage$.map(val => JSON.stringify(val))
-
+// the test data into a string for localStorage.
+export default function serialize(scores$) {
+  return scores$.map(test => {
+    console.log('test', test);
+    return JSON.stringify(
+    {
+      name: test.name,
+      value: test.value,
+      scores: test.scores.map(scoreData =>
+        {
+          return ({
+          id: scoreData.id,
+          name: scoreData.name,
+          score: scoreData.score,
+        })}
+      )
+    }
+  )});
 };

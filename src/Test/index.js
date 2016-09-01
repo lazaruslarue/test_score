@@ -1,6 +1,6 @@
 import xs from 'xstream'
-import {div, p, input} from '@cycle/dom'
 import isolate from '@cycle/isolate'
+import {div, p, input} from '@cycle/dom'
 
 import intent from './intent'
 import view from './view'
@@ -15,18 +15,21 @@ function amendStateWithChildren(DOMsource) {
   return function (quizData) {
     console.log('ammender', quizData);
 
-    return {
+    let response = {
       ...quizData,
-      // we're just turning the scores into streams
+      // we're turning the score data into streams
+      // and adding scoreItem components to the list
       // this could be handled with Collection library, too
       scores: quizData.scores.map(data => {
         // data that can be subscribed to
-        const prop$ = xs.of(data)
+        let props$ = xs.of(data)
         // discreet/isolated/scoped components
-        const scoreItem = isolate(Score)({DOM: DOMsource, prop$})
+        let scoreItem = isolate(Score)({DOM: DOMsource, props$})
 
         return {
           ...data,
+          // we add the isolated Score component to the general
+          // data model
           scoreItem: {
             DOM: scoreItem.DOM,
             // these actions get fed back to us
@@ -35,6 +38,8 @@ function amendStateWithChildren(DOMsource) {
         }
       })
     }
+    console.log('amender response:' , response);
+    return response
   }
 }
 
@@ -58,7 +63,6 @@ export default function Test(sources) {
     .remember()
 
   const itemAction$ = amendedState$
-    .debug(e=>{console.log('test')})
     .map(({scores})=> xs.merge(...scores.map(i => i.scoreItem.action$)))
     .flatten()
 
@@ -68,16 +72,14 @@ export default function Test(sources) {
 
   const view$ = view(amendedState$);
 
-  let sinks = {
+  const storage$ = serialize(state$).map((state) => ({
+    key: 'Test', value: state
+  }))
+
+  return {
     // requests to draw the DOM
     DOM: view$,
-    // requests to store
-    // storage: xs.of({
-    //   key: "Test",
-    //   value:'{"name":"NewTest","value":100,"scores":[{"name":"krinchar","score":20},{"name":"daveguy","score":85},{"name":"elzapatista","score":101}]}'
-    // })
-    // .debug(console.log)
+    storage: storage$,
   }
 
-  return sinks
 }

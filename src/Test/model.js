@@ -35,6 +35,7 @@ function makeReducer$(action$){
         name: action.payload.name,
         score: action.payload.score,
       })
+      return quizData
     })
 
   const editScoreReducer$ = action$
@@ -70,12 +71,14 @@ export default function model(action$, sourceQuizData$) {
 
   // handle all the action types
   const reducer$ = makeReducer$(action$)
-    .debug(e => {console.log('test', e); return e})
+    .debug(e => {console.log('makereducer', e); return e})
 
   // group it together
   return sourceQuizData$.map(sourceQuizData => reducer$.fold((quizData, reducer) => {
       console.log('quizDataquizDataquizData', quizData, reducer);
-      return reducer(quizData)
+      let result = reducer(quizData)
+      console.log('result', result);
+      return result
     }, sourceQuizData)
   ).flatten()
   // retain the last data point so new subscribers always

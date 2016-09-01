@@ -1,17 +1,11 @@
-export default function intent({DOM, storage}) {
-  // kepress events from input element
-  const exitvalue$ = DOM.select('input')
-    .events('keyup')
-    .map(function(ev) {
-      return {
-        key: 'inputText',
-        value: ev.target.value
-      };
-    })
+import xs from 'xstream'
 
-  return {
-    storage: storage.local.getItem('inputText')
-      .startWith(''),
-    DOM: exitvalue$,
-  }
+export default function intent(DOM) {
+  return xs.merge(
+    // delete clicks
+    DOM.select('div')
+      .events('click')
+      .mapTo({type: 'deleteScore'})
+  )
+  .debug(console.log)
 }
