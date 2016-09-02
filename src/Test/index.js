@@ -13,9 +13,7 @@ import Score from './../Score'
 // amend children so that they're observable sequences
 function amendStateWithChildren(DOMsource) {
   return function (quizData) {
-    console.log('ammender', quizData);
-
-    let response = {
+    return {
       ...quizData,
       // we're turning the score data into streams
       // and adding scoreItem components to the list
@@ -25,8 +23,7 @@ function amendStateWithChildren(DOMsource) {
         let props$ = xs.of(data)
         // discreet/isolated/scoped components
         let scoreItem = isolate(Score)({DOM: DOMsource, props$})
-
-        return {
+        let result = {
           ...data,
           // we add the isolated Score component to the general
           // data model
@@ -36,10 +33,9 @@ function amendStateWithChildren(DOMsource) {
             action$: scoreItem.action$.map(ev => ({...ev, id: data.id}))
           }
         }
+        return result
       })
     }
-    console.log('amender response:' , response);
-    return response
   }
 }
 
@@ -63,14 +59,13 @@ export default function Test(sources) {
     .remember()
 
   const itemAction$ = amendedState$
-    .map(({scores})=> xs.merge(...scores.map(i => i.scoreItem.action$)))
+    .map(({scores})=>xs.merge(...scores.map(i => i.scoreItem.action$)))
     .flatten()
 
   // our Proxy from above will now have itemAction$ overlayed
   proxyItemAction$.imitate(itemAction$)
 
-
-  const view$ = view(amendedState$);
+  const view$ = view(amendedState$)
 
   const storage$ = serialize(state$).map((state) => ({
     key: 'Test', value: state

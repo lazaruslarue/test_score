@@ -14,7 +14,6 @@ function merge() {
 let safeJSONParse = str => JSON.parse(str) || {};
 
 let mergeWithDefaultQuizData = quizData => {
-  console.log(quizData);
   return merge({
     name: 'New Quiz',
     scores: [],

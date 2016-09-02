@@ -8,7 +8,6 @@ import view from './view'
 
 // A Score includes: student name, student score
 export default function Score({DOM, props$}) {
-
   const action$ = intent(DOM)
   const state$ = model(props$, action$)
   const vtree$ = view(state$)

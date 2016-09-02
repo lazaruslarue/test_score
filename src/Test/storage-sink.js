@@ -2,7 +2,6 @@
 // the test data into a string for localStorage.
 export default function serialize(scores$) {
   return scores$.map(test => {
-    console.log('test', test);
     return JSON.stringify(
     {
       name: test.name,

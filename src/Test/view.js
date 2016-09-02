@@ -2,18 +2,17 @@ import xs from 'xstream'
 import {h1, ul, li, div, button, input, span, p, section} from '@cycle/dom'
 
 function renderHeader(data) {
-  console.log('headerrender',data);
   return h1('.testname', 'Test name: ' + data.name + ' ((TODO: click to change name))')
 }
 
 function renderMiddle(data) {
-
+  console.dir(data.scores[0].scoreItem.DOM)
   return section('.middle',[
       p('Input Student Names & Scores'),
       // Scores for each student
       ul('.scores-list', data.scores
-        .map(score =>score.scoreItem.DOM)
-        // .map(score =>score.scoreItem.DOM)
+        // .map(a=>{console.log('DOM u',a.scoreItem.DOM);return a})
+        .map(score => score.scoreItem.DOM)
       ),
       button('.add', 'add')
   ])
@@ -28,9 +27,10 @@ function renderBottom(quizData) {
   ])
 }
 // view expects stream of quizData
-export default function view(quizData$) {
-  return quizData$.map(quizData => {
-     return div('.test',[
+export default function view(state$) {
+  return state$.map(quizData => {
+    console.log('quizDataquizDataquizData', quizData);
+     return div('.quiz',[
        renderHeader(quizData),
        renderMiddle(quizData),
        renderBottom(quizData),

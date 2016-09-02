@@ -71,24 +71,11 @@ export default function model(action$, sourceQuizData$) {
 
   // handle all the action types
   const reducer$ = makeReducer$(action$)
-    .debug(e => {console.log('makereducer', e); return e})
-
   // group it together
-  return sourceQuizData$.map(sourceQuizData => reducer$.fold((quizData, reducer) => {
-      console.log('quizDataquizDataquizData', quizData, reducer);
-      let result = reducer(quizData)
-      console.log('result', result);
-      return result
-    }, sourceQuizData)
-  ).flatten()
+  return sourceQuizData$.map(sourceQuizData => reducer$.fold((quizData, reducer) => reducer(quizData), sourceQuizData).debug(a=>{console.log('inside the fold',a)})
+  )
+  .flatten()
   // retain the last data point so new subscribers always
   // have latest state
   .remember()
-  // .debug(d => {
-  //   console.log('*** datainmodel***',d)
-  //   return d
-  // })
-
-
-
 }
