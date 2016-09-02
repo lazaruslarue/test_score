@@ -2,7 +2,7 @@ import xs from 'xstream'
 
 export default function model(props$, action$) {
 
-  let newProps$ = props$.startWith({ name: 'dingle', score: 100})
+  let newProps$ = props$.startWith({id: 0, name: 'dingle', score: 100})
   .debug(console.log)
 
   // let change$ = xs.merge(
